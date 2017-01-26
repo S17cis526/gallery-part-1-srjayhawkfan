@@ -4,7 +4,7 @@ var http = require('http');
 var port = 3438;
 var fs= require('fs');
 
-function serveImage(filename, req, res){
+function serverImage(filename, req, res){
 
 	var body = fs.readFile('images/'+filename, function(err, body){
 	if(err){
@@ -16,10 +16,13 @@ function serveImage(filename, req, res){
 		return;
 
 	}
+	res.setHeader("Content-Type", "image/jpeg");
+        res.end(body);
+
+
 
 	});
-        res.setHeader("Content-Type", "image/jpeg");
-        res.end(body);
+      
 
 
 

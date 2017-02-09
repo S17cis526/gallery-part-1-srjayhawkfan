@@ -1,5 +1,8 @@
 
 "use strict"; //turns on strict node
+
+
+
 var http = require('http');
 var url = require('url');
 var port = 3438;
@@ -70,12 +73,12 @@ function buildGallery(imageTags){
 			html += '<h1>Hello. </h1> Time is '+Date.now();
 			html += '<body>';
 			html += '<h1>'+config.title+'</h1>';
-			html += '<form>';
+			html += '<form action="">';
 					html += '<input type="text" name="title">'
 					html += '<input type="submit" name="submit">'
 			html += '</form>'
 			html += imageNamesToTags(imageTags).join(' ');
-			html += '<form method="POST">';
+			html += '<form method="POST" action="" enctype="multipart/form-data">';
 						html += '<input type="file" name="image">';
 									html += '<input type="submit" value="Upload Image">';
 			html += '</form>'	;
@@ -147,23 +150,23 @@ var server = http.createServer(function(req, res){
 
 
 	if(urlParts.query){
-	 	var matches =	/title=(.+)(&|$)/.exec(urlParts.query);
+	 	var matches =	/title=(.+)($|&)/.exec(urlParts.query);
 	 if(matches && matches[1]){
-		 title = decodeURIComponent(matches[1]);
-		 fs.writeFile('config.json', JSON.stringify({title: title}));
+		 config.title = decodeURIComponent(matches[1]);
+		 fs.writeFile('config.json', JSON.stringify(config));
 
 	 }
-	}
+}
 
 	switch(urlParts.pathname){
 		case '/':
 		case '/gallery':
-  		serveGallery(req, res);
+  		//serveGallery(req, res);
 			if(req.method == 'GET'){
 				serveGallery(req, res);
 
 			}else if(req.method == 'POST'){
-
+				uploadImage(req, res);
 
 			}
 
